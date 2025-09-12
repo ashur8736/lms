@@ -35,7 +35,7 @@ export const AppContextProvider = (props) => {
       toast.error(error.message);
     }
   };
-  
+
   //fetch userdata
   const fetchUserData = async () => {
     if (user.publicMetadata.role === "educator") {
@@ -43,7 +43,6 @@ export const AppContextProvider = (props) => {
     }
     try {
       const token = await getToken();
-console.log("Clerk Token:", token);   
 
       const { data } = await axios.get(backendurl + "/api/user/data", {
         headers: { Authorization: `Bearer ${token}` },

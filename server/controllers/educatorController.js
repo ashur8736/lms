@@ -44,6 +44,9 @@ const addNewCourse = async (req, res) => {
     const newCourse = await Course.create(parsedCourseData);
 
     const imageUpload = await cloudinary.uploader.upload(imageFile.path);
+
+    console.log("Cloudinary Response:", imageUpload);
+
     newCourse.courseThumbnail = imageUpload.secure_url;
 
     await newCourse.save();
