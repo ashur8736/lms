@@ -15,7 +15,7 @@ export const AppContextProvider = (props) => {
   const navigate = useNavigate();
 
   const { getToken } = useAuth();
-  const { user } = useUser();
+  const { user,isLoaded } = useUser();
 
   const [allcourses, setAllcourses] = useState([]);
   const [isEducator, setIsEducator] = useState(false);
@@ -78,17 +78,19 @@ export const AppContextProvider = (props) => {
     }
   };
 
-  useEffect(() => {
-    fetchAllCourses();
-    fetchUserEnrolledCourses();
-  }, []);
+useEffect(() => {
+  fetchAllCourses();
+}, []); 
 
-  useEffect(() => {
-    if (user) {
-      fetchUserEnrolledCourses();
-      fetchUserData();
-    }
-  }, [user]);
+
+useEffect(() => {
+
+  if (user) {
+    fetchUserEnrolledCourses();
+    fetchUserData();
+  }
+}, [user]);
+
 
   //Function to create average rating of the courses
   const calculateRating = (course) => {

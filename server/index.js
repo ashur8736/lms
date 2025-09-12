@@ -9,7 +9,6 @@ const courseRouter = require("./routes/courseRoutes");
 const { connectCloudinary } = require("./configs/cd"); 
 const userRouter = require("./routes/userRoutes");
 
-
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -17,31 +16,29 @@ const port = process.env.PORT || 3000;
 dbconnect();
 connectCloudinary();
 
-// Stripe webhook FIRST (raw body)
-app.post("/stripe", express.raw({ type: "application/json" }), stripeWebhooks);
 
-// Middlewares
+app.post("/stripe", express.raw({ type: "application/json" }), stripeWebhooks);
+app.post("/clerk", express.raw({ type: "application/json" }), clerkWebhooks);
+
+
 app.use(cors());
 app.use(express.json());
 app.use(clerkMiddleware());
 
-// Routes
-app.get("/", (req, res) => res.send("api working"));
 
+app.get("/", (req, res) => res.send("API working"));
 
 app.use("/api/user", userRouter);
-app.post("/clerk", clerkWebhooks); 
 app.use("/api/educator", educatorRouter);
 app.use("/api/course", courseRouter);
 
 
-// Global error handler (add this)
 app.use((err, req, res, next) => {
   console.error("Middleware error:", err);
   res.status(500).json({ success: false, message: err.message });
 });
 
-// Start server
+
 app.listen(port, () => {
-  console.log(` Server live on port ${port}`);
+  console.log(`Server live on port ${port}`);
 });
