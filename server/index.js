@@ -27,10 +27,19 @@ app.use(clerkMiddleware());
 
 // Routes
 app.get("/", (req, res) => res.send("api working"));
+
+
+app.use("/api/user", userRouter);
 app.post("/clerk", clerkWebhooks); 
 app.use("/api/educator", educatorRouter);
 app.use("/api/course", courseRouter);
-app.use("/api/user", userRouter);
+
+
+// Global error handler (add this)
+app.use((err, req, res, next) => {
+  console.error("Middleware error:", err);
+  res.status(500).json({ success: false, message: err.message });
+});
 
 // Start server
 app.listen(port, () => {

@@ -13,7 +13,7 @@ const CourseCard = ({course}) => {
                {course.courseTitle}
             </h3>
             <p className="text-gray-500">
-                GreatStack
+              {course.educator.name}
             </p>
             <div className="flex items-center space-x-2">
                 <p>

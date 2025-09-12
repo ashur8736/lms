@@ -3,13 +3,21 @@ const Course = require("../models/Course");
 // Get all published courses
 const getAllCourses = async (req, res) => {
   try {
-    const courses = await Course.find({ ispublished: true })
-      .select("-courseContent -enrolledStudents")
-      .populate({ path: "educator" });
+    const courses = await Course.find({ isPublished: true }).select(
+      "-courseContent -enrolledStudents"
+    );
+
+    // Manually add educator details
+    const coursesWithEducator = await Promise.all(
+      courses.map(async (course) => {
+        const educator = await User.findById(course.educator).select("name imageUrl");
+        return { ...course.toObject(), educator };
+      })
+    );
 
     res.status(200).json({
       success: true,
-      courses,
+      courses: coursesWithEducator,
     });
   } catch (error) {
     res.status(500).json({

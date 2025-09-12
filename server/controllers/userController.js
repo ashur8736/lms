@@ -7,7 +7,7 @@ const { messageInRaw } = require("svix");
 
 const getUserData = async (req, res) => {
   try {
-    const userId = req.auth.userId;
+    const { userId } = await req.auth();
     const user = await User.findById(userId);
 
     if (!user) {

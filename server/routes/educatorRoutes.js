@@ -9,11 +9,18 @@ const educatorRouter = express.Router();
 
 educatorRouter.get("/update-role", updateRoleToEducator);
 
+educatorRouter.post(
+  "/add-course",
+  protectEducator,
+  upload.single("image"),
+  addNewCourse
+);
 
-educatorRouter.post("/add-course", upload.single("image"),protectEducator,addNewCourse);
-educatorRouter.get('./courses',protectEducator,getEducatorCourses);
-educatorRouter.get('./dashboard',protectEducator,educatorDashboardData);
-educatorRouter.get('./enrolled-students',protectEducator,getEnrolledstudentsData);
+
+educatorRouter.get("/courses", protectEducator, getEducatorCourses);
+educatorRouter.get("/dashboard", protectEducator, educatorDashboardData);
+educatorRouter.get("/enrolled-students", protectEducator, getEnrolledstudentsData);
+
 
 
 module.exports = educatorRouter;

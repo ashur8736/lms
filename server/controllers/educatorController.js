@@ -12,10 +12,9 @@ const updateRoleToEducator = async (req, res) => {
     await clerkClient.users.updateUserMetadata(userId, {
       publicMetadata: { role: "educator" },
     });
-
     res.json({
       success: true,
-      message: "You can publish a course now ",
+      message: "You can publish a course now",
     });
   } catch (error) {
     res.status(500).json({
@@ -77,19 +76,23 @@ const getEducatorCourses = async (req, res) => {
   }
 };
 
-//get educator dashboard data (total earning,enrolled students,no of courses)
+//get educator dashboard data (total earning, enrolled students,no of courses)
 
-const educatorDashboardData = async () => {
+const educatorDashboardData = async (req,res) => {
   try {
     const educator = req.auth.userId;
     const courses = await Course.find({ educator });
     const totalCourses = courses.length;
 
+    const courseIds=courses.map(course => course._id)
+
     //calculate total earnings from purchases
+    
     const purchases = await Purchase.find({
       courseId: { $in: courseIds },
       status: "completed",
     });
+
     const totalEarnings = purchases.reduce(
       (sum, purchase) => sum + purchase.amount,
       0
@@ -132,7 +135,7 @@ const getEnrolledstudentsData = async (req, res) => {
   try {
     const educator = req.auth.userId;
     const courses = await Course.find({ educator });
-    const courseIds = course.map((course) => course._id);
+    const courseIds = courses.map((course) => course._id);
 
     const purchases = await Purchase.find({
       courseId: { $in: courseIds },
@@ -143,10 +146,9 @@ const getEnrolledstudentsData = async (req, res) => {
 
     const enrolledStudents = purchases.map((purchase) => ({
       student: purchase.userId,
-      courseTitle: purchase.CourseId.courseTitle,
+      courseTitle: purchase.courseId.courseTitle,
       purchaseDate: purchase.createdAt,
     }));
-
     res.json({
       success: true,
       enrolledStudents,
