@@ -16,9 +16,16 @@ const port = process.env.PORT || 3000;
 dbconnect();
 connectCloudinary();
 
+app.post("/clerk", express.raw({ type: "application/json" }), (req, res, next) => {
+  console.log("Clerk webhook received:", req.headers["svix-id"]);
+  next();
+}, clerkWebhooks);
 
-app.post("/stripe", express.raw({ type: "application/json" }), stripeWebhooks);
-app.post("/clerk", express.raw({ type: "application/json" }), clerkWebhooks);
+app.post("/stripe", express.raw({ type: "application/json" }), (req, res, next) => {
+  console.log(" Stripe webhook received:", req.headers["stripe-signature"]);
+  next();
+}, stripeWebhooks);
+
 
 
 app.use(cors());
