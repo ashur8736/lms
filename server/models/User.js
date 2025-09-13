@@ -19,6 +19,7 @@ const UserSchema = new mongoose.Schema(
     imageUrl: {
       type: String,
       required: true,
+      default:'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png'
     },
     enrolledCourses: [
       {
