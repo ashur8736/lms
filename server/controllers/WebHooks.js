@@ -8,13 +8,11 @@ const clerkWebhooks = async (req, res) => {
   try {
     const whook = new Webhook(process.env.CLERK_WEBHOOK_SECRET);
 
-    // Verify and parse webhook
-   const evt = whook.verify(req.body, {
-  "svix-id": req.headers["svix-id"],
-  "svix-timestamp": req.headers["svix-timestamp"],
-  "svix-signature": req.headers["svix-signature"],
-});
-
+    const evt = whook.verify(req.body, {
+      "svix-id": req.headers["svix-id"],
+      "svix-timestamp": req.headers["svix-timestamp"],
+      "svix-signature": req.headers["svix-signature"],
+    });
 
     const { data, type } = evt;
 
@@ -22,8 +20,8 @@ const clerkWebhooks = async (req, res) => {
       case "user.created": {
         const userData = {
           _id: data.id,
-          email: data.email_addresses[0].email_address,
-          name: data.first_name + " " + data.last_name,
+          email: data.email_addresses?.[0]?.email_address || null,
+          name: [data.first_name, data.last_name].filter(Boolean).join(" "),
           imageUrl: data.image_url,
         };
 
@@ -33,8 +31,8 @@ const clerkWebhooks = async (req, res) => {
 
       case "user.updated": {
         const userData = {
-          email: data.email_addresses[0].email_address,
-          name: data.first_name + " " + data.last_name,
+          email: data.email_addresses?.[0]?.email_address || null,
+          name: [data.first_name, data.last_name].filter(Boolean).join(" "),
           imageUrl: data.image_url,
         };
 
@@ -51,7 +49,7 @@ const clerkWebhooks = async (req, res) => {
         return res.json({ success: true, message: "Unhandled event type" });
     }
   } catch (error) {
-    console.error("Webhook error:", error.message);
+    console.error("Clerk Webhook error:", error.message);
     return res.status(400).json({
       success: false,
       message: error.message,

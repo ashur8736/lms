@@ -31,7 +31,7 @@ const getUserData = async (req, res) => {
 
 const userEnrolledCourses = async (req, res) => {
   try {
-    const userId = req.auth.userId;
+    const { userId } = req.auth();
     const userData = await User.findById(userId).populate("enrolledCourses");
 
     if (!userData) {
@@ -58,7 +58,8 @@ const purchaseCourse = async (req, res) => {
   try {
     const { courseId } = req.body;
     const { origin } = req.headers;
-    const userId = req.auth.userId;
+    const { userId } = req.auth();
+
     const userData = await User.findById(userId);
     const courseData = await Course.findById(courseId);
 
@@ -119,7 +120,7 @@ const purchaseCourse = async (req, res) => {
 //upadate user course progress
 const updateUserCourseProgress = async () => {
   try {
-    const userId = req.auth.userId;
+    const { userId } = req.auth();
     const { courseId, lectureId } = req.body;
     const progressData = await CourseProgress.findOne({ userId, courseId });
 
@@ -154,7 +155,7 @@ const updateUserCourseProgress = async () => {
 //get user course progress
 const getUserCourseProgress = async (req, res) => {
   try {
-    const userId = req.auth.userId;
+    const { userId } = req.auth();
     const { courseId } = req.body;
     const progressData = await CourseProgress.findOne({
       userId,
@@ -174,7 +175,7 @@ const getUserCourseProgress = async (req, res) => {
 
 //add user rating to course
 const addUserRating = async (req, res) => {
-  const userId = req.auth.userId;
+  const { userId } = req.auth();
   const { courseId, rating } = req.body;
 
   if (!courseId || !userId || !rating || rating < 1 || rating > 5) {

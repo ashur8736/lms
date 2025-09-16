@@ -3,7 +3,7 @@ const { clerkClient } = require("@clerk/express");
 // Middleware to protect educator-only routes
 const protectEducator = async (req, res, next) => {
   try {
-    const userId = req.auth.userId;
+    const { userId } = req.auth();
 
     const response = await clerkClient.users.getUser(userId);
 

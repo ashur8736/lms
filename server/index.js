@@ -33,7 +33,7 @@ app.use(express.json());
 app.use(clerkMiddleware());
 
 
-app.get("/", (req, res) => res.send("API working"));
+app.get("/", async (req, res) => {res.send("api working")});
 
 app.use("/api/user", userRouter);
 app.use("/api/educator", educatorRouter);
